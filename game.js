@@ -15,15 +15,15 @@ let ctx;
 
 canvas = document.createElement("canvas");
 ctx = canvas.getContext("2d");
-canvas.width = 512;
-canvas.height = 480;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight-85;
 document.body.appendChild(canvas);
 
 let bgReady, heroReady, monsterReady;
 let bgImage, heroImage, monsterImage;
 
 let startTime = Date.now();
-const SECONDS_PER_ROUND = 30;
+const SECONDS_PER_ROUND = 15;
 let elapsedTime = 0;
 
 function loadImages() {
@@ -33,7 +33,7 @@ function loadImages() {
     bgReady = true;
   };
   bgImage.src = "images/background.png";
-  
+
   heroImage = new Image();
   heroImage.onload = function () {
     // show the hero image
@@ -62,8 +62,10 @@ function loadImages() {
 let heroX = canvas.width / 2;
 let heroY = canvas.height / 2;
 
-let monsterX = 100;
-let monsterY = 100;
+let monsterX = 0;
+let monsterY = Math.random()*canvas.height-32;
+let monsterSpeed=5
+let direction = 'down';
 
 let score = 0;
 
@@ -140,10 +142,39 @@ let update = function () {
   ) {
     // Pick a new location for the monster.
     // Note: Change this to place the monster at a new, random location.
-    monsterX = Math.abs(Math.round(Math.random()*canvas.width-32));
+    monsterX=0
     monsterY = Math.abs(Math.round(Math.random()*canvas.height-32));
     score++
   }
+
+  // Make monster move
+  if (monsterX<(canvas.width-32)) {
+    monsterX+=monsterSpeed
+  }
+  else {
+    monsterX = 0
+  }
+  if (direction == 'down') {
+
+    if (monsterY<=(canvas.height-32)) {
+        monsterY += monsterSpeed;
+    }
+    else
+    {
+        direction = 'up';
+    }
+}
+  else if (direction == 'up') {
+
+    if (monsterY >= 0)
+    {
+        monsterY -= monsterSpeed;
+    }
+    else
+    {
+        direction = 'down';
+    }
+}
 };
 
 /**
@@ -151,7 +182,7 @@ let update = function () {
  */
 var render = function () {
   if (bgReady) {
-    ctx.drawImage(bgImage, 0, 0);
+    ctx.drawImage(bgImage,0,0,canvas.width,canvas.height);
   }
   if (heroReady) {
     ctx.drawImage(heroImage, heroX, heroY);
