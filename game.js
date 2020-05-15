@@ -88,12 +88,28 @@ function setupKeyboardListeners() {
   }, false);
 }
 
-// Add username on top of the hero
+// Add other stuffs
 let userName = document.getElementById('username')
+let e = document.getElementById("startGameBtn");
 
+//Put name on the herp
 function printUserName() {
    ctx.fillText(`${userName.value}`, heroX-5, heroY-10);
  }
+
+ // Make play button disappear
+function toggle_visibility() {
+      if(e.style.display == 'block') {
+         e.style.display = 'none';
+      }
+      else
+        { e.style.display = 'block'; }
+}
+
+// Put a time out
+function isGameOver() {
+
+}
 
 
 /**
@@ -216,4 +232,3 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 // Let's play this game!
 loadImages();
 setupKeyboardListeners();
-main();

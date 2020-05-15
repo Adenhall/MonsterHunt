@@ -11,3 +11,11 @@ canvas {
   position: absolute;
   top: 80px;
 }
+body > button {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left:35%;
+  width: 400px;
+  height: auto;
+}
