@@ -6,7 +6,7 @@
 
 /* Initialization.
 Here, we create and add our "canvas" to the page.
-We also load all of our images. 
+We also load all of our images.
 */
 
 
@@ -33,6 +33,7 @@ function loadImages() {
     bgReady = true;
   };
   bgImage.src = "images/background.png";
+  
   heroImage = new Image();
   heroImage.onload = function () {
     // show the hero image
@@ -48,13 +49,13 @@ function loadImages() {
   monsterImage.src = "images/monster.png";
 }
 
-/** 
+/**
  * Setting up our characters.
- * 
+ *
  * Note that heroX represents the X position of our hero.
  * heroY represents the Y position.
  * We'll need these values to know where to "draw" the hero.
- * 
+ *
  * The same applies to the monster.
  */
 
@@ -64,16 +65,18 @@ let heroY = canvas.height / 2;
 let monsterX = 100;
 let monsterY = 100;
 
-/** 
+let score = 0;
+
+/**
  * Keyboard Listeners
- * You can safely ignore this part, for now. 
- * 
+ * You can safely ignore this part, for now.
+ *
  * This is just to let JavaScript know when the user has pressed a key.
 */
 let keysDown = {};
 function setupKeyboardListeners() {
   // Check for keys pressed where key represents the keycode captured
-  // For now, do not worry too much about what's happening here. 
+  // For now, do not worry too much about what's happening here.
   addEventListener("keydown", function (key) {
     keysDown[key.keyCode] = true;
   }, false);
@@ -83,11 +86,18 @@ function setupKeyboardListeners() {
   }, false);
 }
 
+// Add username on top of the hero
+let userName = document.getElementById('username')
+
+function printUserName() {
+   ctx.fillText(`${userName.value}`, heroX-5, heroY-10);
+ }
+
 
 /**
  *  Update game objects - change player position based on key pressed
  *  and check to see if the monster has been caught!
- *  
+ *
  *  If you change the value of 5, the player will move at a different rate.
  */
 let update = function () {
@@ -108,6 +118,18 @@ let update = function () {
     heroX += 5;
   }
 
+  // Get the player back in the game zone
+  if (heroX < 0) {
+    heroX = canvas.width
+  } else if (heroX > canvas.width) {
+    heroX = 0
+  }
+  if (heroY < 0) {
+    heroY = canvas.height
+  } else if (heroY > canvas.height) {
+    heroY = 0
+  }
+
   // Check if player and monster collided. Our images
   // are about 32 pixels big.
   if (
@@ -118,8 +140,9 @@ let update = function () {
   ) {
     // Pick a new location for the monster.
     // Note: Change this to place the monster at a new, random location.
-    monsterX = monsterX + 50;
-    monsterY = monsterY + 70;
+    monsterX = Math.abs(Math.round(Math.random()*canvas.width-32));
+    monsterY = Math.abs(Math.round(Math.random()*canvas.height-32));
+    score++
   }
 };
 
@@ -136,7 +159,8 @@ var render = function () {
   if (monsterReady) {
     ctx.drawImage(monsterImage, monsterX, monsterY);
   }
-  ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
+  ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 20);
+  ctx.fillText(`You've defeated: ${score} Orc(s)`, 20, 40);
 };
 
 /**
@@ -145,10 +169,11 @@ var render = function () {
  * render (based on the state of our game, draw the right things)
  */
 var main = function () {
-  update(); 
+  update();
   render();
+  printUserName();
   // Request to do this again ASAP. This is a special method
-  // for web browsers. 
+  // for web browsers.
   requestAnimationFrame(main);
 };
 
