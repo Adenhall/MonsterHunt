@@ -68,6 +68,7 @@ let monsterSpeed=5
 let direction = 'down';
 
 let score = 0;
+let history=0;
 
 /**
  * Keyboard Listeners
@@ -164,6 +165,11 @@ let update = function () {
     score++
   }
 
+  // Add history and best score
+  if (history<score) {
+    history=score;
+  }
+
   // Make monster move
   if (monsterX<(canvas.width-32)) {
     monsterX+=monsterSpeed
@@ -209,6 +215,7 @@ var render = function () {
   }
   ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 20);
   ctx.fillText(`You've defeated: ${score} Orc(s)`, 20, 40);
+  ctx.fillText(`Your best: ${history} Orc(s)`, 20, 60);
 };
 
 /**
@@ -227,6 +234,7 @@ var main = function () {
   }
   else {
     toggle_visibility();
+    score=0;
   }
 };
 
