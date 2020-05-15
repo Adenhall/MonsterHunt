@@ -106,9 +106,10 @@ function toggle_visibility() {
         { e.style.display = 'block'; }
 }
 
-// Put a time out
-function isGameOver() {
-
+// Reset timer
+function resetTimer() {
+  startTime = Date.now()
+  elapsedTime=0;
 }
 
 
@@ -216,12 +217,17 @@ var render = function () {
  * render (based on the state of our game, draw the right things)
  */
 var main = function () {
-  update();
-  render();
-  printUserName();
-  // Request to do this again ASAP. This is a special method
-  // for web browsers.
-  requestAnimationFrame(main);
+  if ((SECONDS_PER_ROUND - elapsedTime)>0) {
+    update();
+    render();
+    printUserName();
+    // Request to do this again ASAP. This is a special method
+    // for web browsers.
+    requestAnimationFrame(main);
+  }
+  else {
+    toggle_visibility();
+  }
 };
 
 // Cross-browser support for requestAnimationFrame.
