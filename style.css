@@ -19,3 +19,15 @@ body > button {
   width: 400px;
   height: auto;
 }
+h1 {
+  position: absolute;
+  z-index: 2;
+  top: 30%;
+  left:37%;
+}
+h5 {
+  position: absolute;
+  z-index: 2;
+  top: 40%;
+  left: 46%;
+}

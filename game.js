@@ -19,8 +19,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight-85;
 document.body.appendChild(canvas);
 
-let bgReady, heroReady, monsterReady;
-let bgImage, heroImage, monsterImage;
+let bgReady, heroReady, monsterReady, monsterReady2, monsterReady3, monsterReady4;
+let bgImage, heroImage, monsterImage, monsterImage2, monsterImage3, monsterImage4;
 
 let startTime = Date.now();
 const SECONDS_PER_ROUND = 15;
@@ -47,6 +47,27 @@ function loadImages() {
     monsterReady = true;
   };
   monsterImage.src = "images/monster.png";
+
+  monsterImage2 = new Image();
+  monsterImage2.onload = function () {
+    // show the monster image
+    monsterReady2 = true;
+  };
+  monsterImage2.src = "images/monster.png";
+
+  monsterImage3 = new Image();
+  monsterImage3.onload = function () {
+    // show the monster image
+    monsterReady3 = true;
+  };
+  monsterImage3.src = "images/monster.png";
+
+  monsterImage4 = new Image();
+  monsterImage4.onload = function () {
+    // show the monster image
+    monsterReady4 = true;
+  };
+  monsterImage4.src = "images/monster.png";
 }
 
 /**
@@ -64,11 +85,21 @@ let heroY = canvas.height / 2;
 
 let monsterX = 0;
 let monsterY = Math.random()*canvas.height-32;
-let monsterSpeed=5
+let monsterX2 = 0;
+let monsterY2 = Math.random()*canvas.height-32;
+let monsterX3 = 0;
+let monsterY3 = Math.random()*canvas.height-32;
+let monsterX4 = 0;
+let monsterY4 = Math.random()*canvas.height-32;
+let monsterSpeed=5;
 let direction = 'down';
+let direction2 = 'up';
+let direction3 = 'up';
+let direction4 = 'down';
 
 let score = 0;
-let history=0;
+let highScore=0;
+let history = [];
 
 /**
  * Keyboard Listeners
@@ -111,6 +142,21 @@ function toggle_visibility() {
 function resetTimer() {
   startTime = Date.now()
   elapsedTime=0;
+  heroX = canvas.width / 2;
+  heroY = canvas.height / 2;
+
+  monsterX = 0;
+  monsterY = Math.random()*canvas.height-32;
+  monsterX2 = 0;
+  monsterY2 = Math.random()*canvas.height-32;
+  monsterX3 = 0;
+  monsterY3 = Math.random()*canvas.height-32;
+  monsterX4 = 0;
+  monsterY4 = Math.random()*canvas.height-32;
+  monsterSpeed=5;
+
+  document.getElementById('endGameNoti').innerHTML = null;
+  document.getElementById('bestScore').innerHTML = null;
 }
 
 
@@ -165,18 +211,76 @@ let update = function () {
     score++
   }
 
-  // Add history and best score
-  if (history<score) {
-    history=score;
+  if (
+    heroX <= (monsterX2 + 32)
+    && monsterX2 <= (heroX + 32)
+    && heroY <= (monsterY2 + 32)
+    && monsterY2 <= (heroY + 32)
+  ) {
+
+
+    monsterX2=0
+    monsterY2 = Math.abs(Math.round(Math.random()*canvas.height-32));
+    score++
   }
 
-  // Make monster move
+  if (
+    heroX <= (monsterX3 + 32)
+    && monsterX3 <= (heroX + 32)
+    && heroY <= (monsterY3 + 32)
+    && monsterY3 <= (heroY + 32)
+  ) {
+
+
+    monsterX3=0
+    monsterY3 = Math.abs(Math.round(Math.random()*canvas.height-32));
+    score++
+  }
+
+  if (
+    heroX <= (monsterX4 + 32)
+    && monsterX4 <= (heroX + 32)
+    && heroY <= (monsterY4 + 32)
+    && monsterY4 <= (heroY + 32)
+  ) {
+
+
+    monsterX4=0
+    monsterY4 = Math.abs(Math.round(Math.random()*canvas.height-32));
+    score++
+  }
+
+  // Add history and best score
+  if (highScore<score) {
+    highScore=score;
+  }
+
+  // Make monsters move
   if (monsterX<(canvas.width-32)) {
     monsterX+=monsterSpeed
   }
   else {
     monsterX = 0
   }
+  if (monsterX2<(canvas.width-32)) {
+    monsterX2+=monsterSpeed
+  }
+  else {
+    monsterX2 = 0
+  }
+  if (monsterX3<(canvas.width-32)) {
+    monsterX3+=monsterSpeed
+  }
+  else {
+    monsterX3 = 0
+  }
+  if (monsterX4<(canvas.width-32)) {
+    monsterX4+=monsterSpeed
+  }
+  else {
+    monsterX4 = 0
+  }
+
   if (direction == 'down') {
 
     if (monsterY<=(canvas.height-32)) {
@@ -186,7 +290,7 @@ let update = function () {
     {
         direction = 'up';
     }
-}
+  }
   else if (direction == 'up') {
 
     if (monsterY >= 0)
@@ -197,7 +301,70 @@ let update = function () {
     {
         direction = 'down';
     }
-}
+  }
+  if (direction2 == 'down') {
+
+    if (monsterY2<=(canvas.height-32)) {
+        monsterY2 += monsterSpeed;
+    }
+    else
+    {
+        direction2 = 'up';
+    }
+  }
+  else if (direction2 == 'up') {
+
+    if (monsterY2 >= 0)
+    {
+        monsterY2 -= monsterSpeed;
+    }
+    else
+    {
+        direction2 = 'down';
+    }
+  }
+  if (direction3 == 'down') {
+
+    if (monsterY3<=(canvas.height-32)) {
+        monsterY3 += monsterSpeed;
+    }
+    else
+    {
+        direction3 = 'up';
+    }
+  }
+  else if (direction3 == 'up') {
+
+    if (monsterY3 >= 0)
+    {
+        monsterY3 -= monsterSpeed;
+    }
+    else
+    {
+        direction3 = 'down';
+    }
+  }
+  if (direction4 == 'down') {
+
+    if (monsterY4<=(canvas.height-32)) {
+        monsterY4 += monsterSpeed;
+    }
+    else
+    {
+        direction4 = 'up';
+    }
+  }
+  else if (direction4 == 'up') {
+
+    if (monsterY4 >= 0)
+    {
+        monsterY4 -= monsterSpeed;
+    }
+    else
+    {
+        direction4 = 'down';
+    }
+  }
 };
 
 /**
@@ -213,9 +380,19 @@ var render = function () {
   if (monsterReady) {
     ctx.drawImage(monsterImage, monsterX, monsterY);
   }
+  if (monsterReady2) {
+    ctx.drawImage(monsterImage2, monsterX2, monsterY2);
+  }
+  if (monsterReady3) {
+    ctx.drawImage(monsterImage3, monsterX3, monsterY3);
+  }
+  if (monsterReady4) {
+    ctx.drawImage(monsterImage4, monsterX4, monsterY4);
+  }
   ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 20);
   ctx.fillText(`You've defeated: ${score} Orc(s)`, 20, 40);
-  ctx.fillText(`Your best: ${history} Orc(s)`, 20, 60);
+  ctx.fillText(`Your best: ${highScore} Orc(s)`, 20, 60);
+  ctx.fillText(`You've scored: ${history}`, 20, 80)
 };
 
 /**
@@ -234,6 +411,10 @@ var main = function () {
   }
   else {
     toggle_visibility();
+    document.getElementById('startGameBtn').innerHTML = `Click this to play again!`;
+    document.getElementById('endGameNoti').innerHTML = `You defeated ${score} orcs`;
+    document.getElementById('bestScore').innerHTML = `Best score: ${highScore}`;
+    history.push(score);
     score=0;
   }
 };
