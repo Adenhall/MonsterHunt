@@ -19,11 +19,11 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight-85;
 document.body.appendChild(canvas);
 
-let bgReady, heroReady, monsterReady, monsterReady2, monsterReady3, monsterReady4, slimeReady;
-let bgImage, heroImage, monsterImage, monsterImage2, monsterImage3, monsterImage4, slimeImage;
+let bgReady, heroReady, monsterReady, monsterReady2, monsterReady3, monsterReady4, slimeReady, slimeReady2;
+let bgImage, heroImage, monsterImage, monsterImage2, monsterImage3, monsterImage4, slimeImage, slimeImage2;
 
 let startTime = Date.now();
-const SECONDS_PER_ROUND = 15;
+let SECONDS_PER_ROUND = 15;
 let elapsedTime = 0;
 
 function loadImages() {
@@ -74,6 +74,12 @@ function loadImages() {
     slimeReady = true;
   };
   slimeImage.src = "images/slime.png"
+
+  slimeImage2 = new Image();
+  slimeImage2.onload = function () {
+    slimeReady2 = true;
+  };
+  slimeImage2.src = "images/slime.png"
 }
 
 /**
@@ -99,6 +105,8 @@ let monsterX4 = 0;
 let monsterY4 = Math.random()*canvas.height-32;
 let slimeX = 0;
 let slimeY = Math.abs(Math.random()*canvas.height-120);
+let slimeX2 = 0;
+let slimeY2 = Math.abs(Math.random()*canvas.height-120);
 let monsterSpeed=5;
 let direction = 'down';
 let direction2 = 'up';
@@ -134,7 +142,7 @@ let e = document.getElementById("startGameBtn");
 
 //Put name on the herp
 function printUserName() {
-   ctx.fillText(`${userName.value}`, heroX-5, heroY-10);
+   ctx.fillText(`${userName.value}`, heroX-25, heroY-10);
  }
 
  // Make play button disappear
@@ -161,8 +169,10 @@ function resetTimer() {
   monsterY3 = Math.random()*canvas.height-32;
   monsterX4 = 0;
   monsterY4 = Math.random()*canvas.height-32;
-  let slimeX = 0;
-  let slimeY = Math.random()*canvas.height-120;
+  slimeX = 0;
+  slimeY = Math.abs(Math.random()*canvas.height-120);
+  slimeX2 = 0;
+  slimeY2 = Math.abs(Math.random()*canvas.height-120);
   monsterSpeed=5;
 
   document.getElementById('endGameNoti').innerHTML = null;
@@ -219,6 +229,7 @@ let update = function () {
     monsterX=0
     monsterY = Math.abs(Math.round(Math.random()*canvas.height-32));
     score++
+    SECONDS_PER_ROUND+=1
   }
 
   if (
@@ -232,6 +243,7 @@ let update = function () {
     monsterX2=0
     monsterY2 = Math.abs(Math.round(Math.random()*canvas.height-32));
     score++
+    SECONDS_PER_ROUND+=0.5
   }
 
   if (
@@ -245,6 +257,7 @@ let update = function () {
     monsterX3=0
     monsterY3 = Math.abs(Math.round(Math.random()*canvas.height-32));
     score++
+    SECONDS_PER_ROUND+=1
   }
 
   if (
@@ -258,6 +271,7 @@ let update = function () {
     monsterX4=0
     monsterY4 = Math.abs(Math.round(Math.random()*canvas.height-32));
     score++
+    SECONDS_PER_ROUND+=0.5
   }
 
   if (
@@ -270,6 +284,17 @@ let update = function () {
 
     elapsedTime = SECONDS_PER_ROUND;
   }
+
+    if (
+      heroX <= (slimeX2 + 90)
+      && slimeX2 <= (heroX + 32)
+      && heroY <= (slimeY2 + 120)
+      && slimeY2 <= (heroY + 32)
+    ) {
+
+
+      elapsedTime = SECONDS_PER_ROUND;
+    }
 
   // Add history and best score
   if (highScore<score) {
@@ -307,6 +332,15 @@ let update = function () {
   }
   else {
     slimeX = 0
+    slimeY = Math.abs(Math.random()*canvas.height-120);
+  }
+
+  if (slimeX2<(canvas.width-32)) {
+    slimeX2+=1;
+  }
+  else {
+    slimeX2 = 0
+    slimeY2 = Math.abs(Math.random()*canvas.height-120);
   }
 
   if (direction == 'down') {
@@ -420,10 +454,14 @@ var render = function () {
   if (slimeReady) {
     ctx.drawImage(slimeImage, slimeX-50, slimeY);
   }
-  ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 20);
-  ctx.fillText(`You've defeated: ${score} Orc(s)`, 20, 40);
-  ctx.fillText(`Your best: ${highScore} Orc(s)`, 20, 60);
-  ctx.fillText(`You've scored: ${history}`, 20, 80)
+  if (slimeReady2) {
+    ctx.drawImage(slimeImage2, slimeX2-50, slimeY2);
+  }
+  ctx.font = "20px Verdana";
+  ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 30);
+  ctx.fillText(`You've defeated: ${score} Orc(s)`, 20, 60);
+  ctx.fillText(`Your best: ${highScore} Orc(s)`, 20, 80);
+  ctx.fillText(`You've scored: ${history}`, 20, 100)
 };
 
 /**
@@ -447,6 +485,7 @@ var main = function () {
     document.getElementById('bestScore').innerHTML = `Best score: ${highScore}`;
     history.push(score);
     score=0;
+    SECONDS_PER_ROUND = 15;
   }
 };
 
