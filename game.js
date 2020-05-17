@@ -19,8 +19,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight-85;
 document.body.appendChild(canvas);
 
-let bgReady, heroReady, monsterReady, monsterReady2, monsterReady3, monsterReady4;
-let bgImage, heroImage, monsterImage, monsterImage2, monsterImage3, monsterImage4;
+let bgReady, heroReady, monsterReady, monsterReady2, monsterReady3, monsterReady4, slimeReady;
+let bgImage, heroImage, monsterImage, monsterImage2, monsterImage3, monsterImage4, slimeImage;
 
 let startTime = Date.now();
 const SECONDS_PER_ROUND = 15;
@@ -68,6 +68,12 @@ function loadImages() {
     monsterReady4 = true;
   };
   monsterImage4.src = "images/monster.png";
+
+  slimeImage = new Image();
+  slimeImage.onload = function () {
+    slimeReady = true;
+  };
+  slimeImage.src = "images/slime.png"
 }
 
 /**
@@ -91,6 +97,8 @@ let monsterX3 = 0;
 let monsterY3 = Math.random()*canvas.height-32;
 let monsterX4 = 0;
 let monsterY4 = Math.random()*canvas.height-32;
+let slimeX = 0;
+let slimeY = Math.abs(Math.random()*canvas.height-120);
 let monsterSpeed=5;
 let direction = 'down';
 let direction2 = 'up';
@@ -153,6 +161,8 @@ function resetTimer() {
   monsterY3 = Math.random()*canvas.height-32;
   monsterX4 = 0;
   monsterY4 = Math.random()*canvas.height-32;
+  let slimeX = 0;
+  let slimeY = Math.random()*canvas.height-120;
   monsterSpeed=5;
 
   document.getElementById('endGameNoti').innerHTML = null;
@@ -250,6 +260,17 @@ let update = function () {
     score++
   }
 
+  if (
+    heroX <= (slimeX + 90)
+    && slimeX <= (heroX + 32)
+    && heroY <= (slimeY + 120)
+    && slimeY <= (heroY + 32)
+  ) {
+
+
+    elapsedTime = SECONDS_PER_ROUND;
+  }
+
   // Add history and best score
   if (highScore<score) {
     highScore=score;
@@ -279,6 +300,13 @@ let update = function () {
   }
   else {
     monsterX4 = 0
+  }
+
+  if (slimeX<(canvas.width-32)) {
+    slimeX+=1;
+  }
+  else {
+    slimeX = 0
   }
 
   if (direction == 'down') {
@@ -388,6 +416,9 @@ var render = function () {
   }
   if (monsterReady4) {
     ctx.drawImage(monsterImage4, monsterX4, monsterY4);
+  }
+  if (slimeReady) {
+    ctx.drawImage(slimeImage, slimeX-50, slimeY);
   }
   ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 20);
   ctx.fillText(`You've defeated: ${score} Orc(s)`, 20, 40);

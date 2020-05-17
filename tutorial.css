@@ -1,0 +1,13 @@
+body {
+  margin: 10px;
+}
+section > ul {
+  margin: 20px;
+  margin-top: 50px;
+}
+.fa-heart {
+  color: red;
+}
+footer {
+  text-align: center;
+}
